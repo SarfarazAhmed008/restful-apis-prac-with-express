@@ -1,7 +1,18 @@
 const express = require('express');
+const logger = require('./logger');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const Joi = require('joi');
+
 const app = express();
+
 app.use(express.json());
+app.use(express.urlencoded({ extended : true }));
+app.use(express.static('public'));
+app.use(helmet());
+app.use(morgan('tiny'));
+
+app.use(logger);
 
 const courses = [
     {id:1, name:'course1'},
@@ -62,5 +73,5 @@ function validateCourse(course){
     return Joi.validate(course, schema);
 }
 
-const port = process.env.PORT || 3000; // for setting env port ..go to terminal and type : set PORT=5000
+const port = process.env.PORT || 3000; // for setting env port ..go to terminal and type -> set PORT=5000
 app.listen(port, () => console.log(`Listening from the port ${port}...`));
